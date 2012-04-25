@@ -5,4 +5,14 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import air.update.events.DownloadErrorEvent;
+			import air.update.ApplicationUpdaterUI;
+			import air.update.events.UpdateEvent;
+			
+			import mx.controls.Alert;
+			
+		]]>
+	</fx:Script>
 </s:WindowedApplication>
