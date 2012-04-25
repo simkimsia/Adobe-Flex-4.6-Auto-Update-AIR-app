@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+  <version>2.0</version>
+  <url>http://localhost/TestUpdate/TestUpdate2.air</url>
+  <description><![CDATA[
+Version 2.0. This new version includes:
+    * Feature 1
+    * Feature 2
+    * Feature 3        
+  ]]></description>
+</update>
