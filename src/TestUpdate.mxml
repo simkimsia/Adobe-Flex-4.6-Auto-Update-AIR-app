@@ -14,6 +14,25 @@
 			import mx.controls.Alert;
 			
 			protected var appUpdater:ApplicationUpdaterUI;
+			
+			protected function onApplicationComplete():void {
+				// assign appUpdater to new ApplicationUpdaterUI object
+				appUpdater = new ApplicationUpdaterUI();
+				// assign the configurationFile of the appUpdater to config/update-config.xml
+				appUpdater.configurationFile = new File("app:/config/update-config.xml");
+				// execute onError function when updater dispatches any ErrorEvent
+				appUpdater.addEventListener(ErrorEvent.ERROR, onError);
+				// initialize the appUpdater
+				appUpdater.initialize();
+			}
+			
+			/**
+			 * Displays an error message when the updater dispatches an error event.
+			 */
+			protected function onError(event:ErrorEvent):void
+			{
+				Alert.show(event.toString());
+			}
 		]]>
 	</fx:Script>
 </s:WindowedApplication>
