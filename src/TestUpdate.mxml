@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   creationComplete="onApplicationComplete()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -10,6 +11,7 @@
 			import air.update.events.DownloadErrorEvent;
 			import air.update.ApplicationUpdaterUI;
 			import air.update.events.UpdateEvent;
+			import air.update.events.StatusUpdateErrorEvent
 			
 			import mx.controls.Alert;
 			
@@ -20,10 +22,27 @@
 				appUpdater = new ApplicationUpdaterUI();
 				// assign the configurationFile of the appUpdater to config/update-config.xml
 				appUpdater.configurationFile = new File("app:/config/update-config.xml");
+				
+				//we set the event handlers for INITIALIZED nad ERROR
+				appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate);
 				// execute onError function when updater dispatches any ErrorEvent
 				appUpdater.addEventListener(ErrorEvent.ERROR, onError);
+				
+				appUpdater.addEventListener(StatusUpdateErrorEvent.UPDATE_ERROR, onStatusUpdateError);
+				appUpdater.addEventListener(DownloadErrorEvent.DOWNLOAD_ERROR, onDownloadError);
+				
+				//we can hide the dialog asking for permission for checking for a new update;
+				//if you want to see it just leave the default value (or set true).
+				appUpdater.isCheckForUpdateVisible = false;
+				//if isFileUpdateVisible is set to true, File Update, File No Update, 
+				//and File Error dialog boxes will be displayed
+				appUpdater.isFileUpdateVisible = false;
+				//if isInstallUpdateVisible is set to true, the dialog box for installing the update is visible
+				appUpdater.isInstallUpdateVisible = false;
+				
 				// initialize the appUpdater
 				appUpdater.initialize();
+				
 			}
 			
 			/**
@@ -33,6 +52,47 @@
 			{
 				Alert.show(event.toString());
 			}
+			
+			protected function onStatusUpdateError(evt:StatusUpdateErrorEvent):void {
+				Alert.show(evt.toString());
+			}
+			
+			protected function onDownloadError(evt:DownloadErrorEvent):void {
+				Alert.show(evt.toString());
+			}
+			
+			
+			/**
+			 * Handler function triggered by the ApplicationUpdater.initialize;
+			 * The updater was initialized and it is ready to take commands 
+			 * (such as <code>checkNow()</code>
+			 * @param UpdateEvent 
+			 */ 
+			protected function onUpdate(event:UpdateEvent):void {
+				//start the process of checking for a new update and to install
+				appUpdater.checkNow();
+			}
+			
+			/**
+			 * Displays the current application version in the UI. 
+			 */
+			private function setApplicationNameAndVersion():void 
+			{
+				var appXML:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var ns:Namespace = appXML.namespace();
+				lblAppVersion.text = appXML.ns::version;
+			}
+			
 		]]>
 	</fx:Script>
+	
+	
+	<s:Group>
+		<s:layout>
+			<s:VerticalLayout />
+		</s:layout>
+		<s:Label id="lblAppVersion" width="300" />
+	</s:Group>
+	
+	
 </s:WindowedApplication>
